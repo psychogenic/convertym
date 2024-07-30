@@ -1,6 +1,20 @@
 # convertym
 Parse and convert a ym file to a simple set of registers to set per sample, either as a binary file or pure python.
 
+## Usage
+Once built, do:
+
+```
+./convertym infile.ym outfile.psym
+```
+or
+```
+./convertym -p infile.ym outfile.py
+```
+for pure python output.
+
+## Context
+
 This is a slightly hacked up version of the StSound library that converts a YM file, 
 e.g. from [here](http://antarctica.no/stuff/atari/YM2/Misc.Games/), for 
 the AY8913 chip into a format that pre-calculated
