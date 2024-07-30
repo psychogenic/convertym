@@ -66,9 +66,10 @@ Each entry in the sample is a register setting, (REG, VAL)
       ]
 ```
 
+## Build it
 
 To build, just compile and link all the files statically, e.g.
-  for i in *.cpp; do echo $i; g++ -ggdb -g3 -O3 -c $i; done; g++ -o convertym *.o
+  for i in *.cpp LZH/*.cpp; do echo $i; g++ -ggdb -g3 -O3 -c $i; done; g++ -o convertym *.o
 
 For a sample of how I actually use the file, see
 [test_rejunity_ay8913](https://github.com/psychogenic/test_rejunity_ay8913)
