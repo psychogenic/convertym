@@ -69,7 +69,7 @@
 #include <fstream>
 #define SKIP_DUPS
 #define CLOCK_FREQ_HZ 2000000
-#define SAMPLE_RATE_HZ 50
+#define SAMPLE_RATE_HZ  50
 
 typedef struct {
     uint8_t reg;
@@ -210,7 +210,7 @@ int main(int argc, char* argv[]) {
         if (purePython) {
                 
                 std::ofstream fs(outfile, std::ios::out | std::ios::binary);
-                fs << "SongInfo = {'clock': " << clockFreq << ", 'rate': " << rateHz << ", 'num': " << numsamps << "}\n";
+                fs << "SongInfo = {'clock': " << clockFreq << ", 'rate': " << (int)rateHz << ", 'num': " << numsamps << "}\n";
                 
                 fs << "Song = [\n";
                 
