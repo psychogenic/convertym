@@ -70,6 +70,8 @@
 #define SKIP_DUPS
 #define CLOCK_FREQ_HZ 2000000
 #define SAMPLE_RATE_HZ  50
+#define PAD_MODULUS	256
+#define ALWAYS_PAD
 
 typedef struct {
     uint8_t reg;
@@ -154,7 +156,6 @@ int main(int argc, char* argv[]) {
                                 }
                         }
                 }
-                
                 for (int i=0; i<YMNUMREGISTERS; i++) {
                     if (YMCurrentSample.registers[i] >=0 ) {
                         
@@ -205,6 +206,7 @@ int main(int argc, char* argv[]) {
          *  REGISTER (1 byte) and VALUE (1 byte) (NUMREGSETTINGS times)
          * 
          */
+
         std::cout << "collected " << samples.size() << " samples, writing to " << outfile << std::endl;
         std::size_t numsamps = samples.size();
         if (purePython) {
@@ -237,20 +239,38 @@ int main(int argc, char* argv[]) {
                 fs << "]\n";
                 
         } else {
+        	int bytecount = 5;
                 std::ofstream fs(outfile, std::ios::out | std::ios::binary);
                 fs << "PSYM1";
                 fs.write((char*)&clockFreq, sizeof(uint32_t));
+		bytecount += sizeof(uint32_t);
                 fs << rateHz;
+		bytecount += 1;
                 fs.write((char*)&(numsamps), sizeof(std::size_t));
+		bytecount += sizeof(std::size_t);
                 
                 for (RegisterSettings * s : samples) {
                         // std::cout << (int)s->num << std::endl;
+			bytecount += 1;
                         fs << s->num;
                         for (uint8_t j=0; j<s->num; j++) {
+				bytecount += 2;
                                 fs << s->values[j].reg;
                                 fs << s->values[j].val;
                         }
                 }
+#ifdef PAD_MODULUS
+#ifdef ALWAYS_PAD
+		if (bytecount % PAD_MODULUS == 0){
+			fs << (uint8_t)0;
+			bytecount++;
+		}
+#endif
+		while (bytecount % PAD_MODULUS) {
+			fs << (uint8_t)0;
+			bytecount++;
+		}
+#endif
                 fs.close();
         }
         
